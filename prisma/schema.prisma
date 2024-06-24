@@ -72,12 +72,29 @@ model ChapterLabs {
   labsId String
   labs   Labs   @relation(fields: [labsId], references: [id], onDelete: Cascade)
 
+  userProgress UserProgressLabs[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([labsId])
 }
 
+model UserProgressLabs {
+  id     String @id @default(uuid())
+  userId String
+
+  chapterId String
+  chapter   ChapterLabs @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  isCompleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, chapterId])
+  @@index([chapterId])
+}
 
 //Лабы-----------------------------------------------------------------------------
 
@@ -122,19 +139,6 @@ model Chapter {
   @@index([courseId])
 }
 
-model Tests {
-  id        String  @id @default(uuid())
-  title     String
-  questions String
-  answer1   String
-  answer2   String
-  answer3   String?
-  answer4   String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model MuxData {
   id         String  @id @default(uuid())
   assetId    String
@@ -159,3 +163,44 @@ model UserProgress {
   @@unique([userId, chapterId])
   @@index([chapterId])
 }
+
+//Тесты------------------------------------------
+
+model Tests {
+  id        String  @id @default(uuid())
+  title     String
+  questions String
+  answer1   String
+  answer2   String
+  answer3   String?
+  answer4   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Quiz {
+  id        String     @id @default(cuid())
+  userId    String
+  name      String
+  questions Question[]
+  createdAt DateTime   @default(now())
+}
+
+model Question {
+  id            String   @id @default(cuid())
+  quizId        String
+  question      String
+  answers       Answer[]
+  correctAnswer Int
+  Quiz          Quiz     @relation(fields: [quizId], references: [id])
+}
+
+model Answer {
+  id         String   @id @default(cuid())
+  questionId String
+  answer     String
+  Question   Question @relation(fields: [questionId], references: [id])
+}
+
+//Тесты------------------------------------------

@@ -4,7 +4,10 @@ const nextConfig = {
         domains:[
             "utfs.io"
         ]
-    }
+    },
+    api: {
+      bodyParser: false, // This line is important, it disables body parsing
+    },
 
 }
 module.exports = {

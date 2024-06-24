@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 
-export const getProgress = async (
+export const getProgressLabs = async (
   userId: string,
   labsId: string
 ): Promise<number> => {
@@ -16,7 +16,7 @@ export const getProgress = async (
     });
 
     const publishedChapterIds = publishedChapters.map((chapter) => chapter.id);
-    const validCompletedChapters = await db.userProgress.count({
+    const validCompletedChapters = await db.userProgressLabs.count({
       where: {
         userId: userId,
         chapterId: {
